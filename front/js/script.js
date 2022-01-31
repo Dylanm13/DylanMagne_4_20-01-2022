@@ -1,15 +1,16 @@
+//Appel de l'API pour la réccupération de données
 fetch("http://localhost:3000/api/products")
     .then(res => {
-        if (res.ok==true) {
-            return res.json()
+        if (res.ok==true) {         //Si la réccupération est un succès
+            return res.json()       //l'API est en transcrite en format .JSON
         }
         throw new Error ('Oops ! La récupération des produits a echoué !')
     })
-    .then(pageProducts)
+    .then(pageProducts)             //Déclaration de la fonction pageProduct
     .catch(err => {
         // Une erreur est survenue
           console.log('Voici une erreur', err)
-          pageProducts([{name:'une erreur est survenue',description:err.message,_id:null,imageUrl:"/back/images/error_icon.png" ,altTxt:'image d\'erreur'}])
+          pageProducts([{name:'une erreur est survenue',description:err.message,_id:null,imageUrl:"/back/images/error_icon.png" ,altTxt:'image d\'erreur'}])    //Erreur en format JSON dans le cas ou le serveur ne répond pas
     });
 
 /**
