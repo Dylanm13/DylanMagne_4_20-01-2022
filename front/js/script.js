@@ -1,54 +1,64 @@
 fetch("http://localhost:3000/api/products")
     .then(res => {
-        
         if (res.ok==true) {
-            return res.json();
+            return res.json()
         }
-        throw new Error('Oops ! Une erreur est apparue !')
+        throw new Error ('Oops ! La récupération des produits a echoué !')
     })
-    .then(data => {
-        const parent = document.querySelector('section#items')
-            parent.innerHTML = '' 
-            console.log('initialisation fucntion data')
-
-        for (let i = 0; i < data.length; i+=1) {
-            console.log(data[i])
-
-            const dataKanap = data[i]
-            let kanap = document.createElement('a');
-            kanap.href = "./product.html?id="+dataKanap._id;
-            
-        
-            let article = document.createElement('article');
-            kanap.appendChild(article);
-        
-            let img = document.createElement('img');
-            img.src = dataKanap.imageUrl;
-            img.alt = dataKanap.altTxt
-            article.appendChild(img);
-        
-            let nameKanap = document.createElement('h3')
-            article.appendChild(nameKanap)
-            let nameKanapProdudct = document.createTextNode(dataKanap.name)
-            nameKanap.appendChild(nameKanapProdudct)
-        
-            let kanapDescription = document.createElement('p')
-            article.appendChild(kanapDescription)
-            let kanapDescriptionText = document.createTextNode(dataKanap.description)
-            kanapDescription.appendChild(kanapDescriptionText)
-         
-            parent.appendChild(kanap);
-        
-        }  
-    })
+    .then(pageProducts)
     .catch(err => {
-  // Une erreur est survenue
-    console.log('Voici une erreur', err)
-    let errorUser = document.createElement('h1')
-    document.querySelector('.titles').appendChild(errorUser)
-    errorUser.innerHTML = 'Nous sommes désolés une erreur est survenue !'
+        // Une erreur est survenue
+          console.log('Voici une erreur', err)
+          pageProducts([{name:'une erreur est survenue',description:err.message,_id:null,imageUrl:"/back/images/error_icon.png" ,altTxt:'image d\'erreur'}])
+    });
 
-});
+/**
+ * afficher les produits récupérer de l'api dans la page HTML
+ * 
+ * @param {Array[Object]} data est un tableau contenant les json des produits canapés 
+ */
+function pageProducts(data) {
+    const kanapParent = document.querySelector('section#items')
+    kanapParent.innerHTML = '' 
+
+    for (let index = 0; index < data.length; index+=1) {
+    console.log(data[index])
+
+    const currentKanap = data[index]
+
+    let kanapLink 
+    if(currentKanap._id!=null){
+        kanapLink = document.createElement('a');
+        kanapLink.href = "./product.html?id="+currentKanap._id;
+    }
+
+    let kanapArticle = document.createElement('article');
+    if(currentKanap._id!=null){
+        kanapLink.appendChild(kanapArticle);
+    }
+    let kanapImage = document.createElement('img');
+    kanapArticle.appendChild(kanapImage);
+    kanapImage.src = currentKanap.imageUrl;
+    kanapImage.alt = currentKanap.altTxt
+
+    let kanapName = document.createElement('h3')
+    kanapArticle.appendChild(kanapName)
+    kanapName.appendChild(document.createTextNode(currentKanap.name))
+
+    let kanapDescription = document.createElement('p')
+    kanapArticle.appendChild(kanapDescription)
+    kanapDescription.appendChild(document.createTextNode(currentKanap.description))
+    
+    if(currentKanap._id!=null){
+        kanapParent.appendChild(kanapLink);
+    }else{
+        kanapParent.appendChild(kanapArticle)
+    }  
+}  
+}
+
+
+
 
 
 
