@@ -2,7 +2,7 @@ const url = new URL(window.location.href).searchParams
 const idUrl = url.get('id')
 console.log(idUrl)
 
-fetch("http://localhost:3000/api/products/" + idUrl)
+fetch("http://localhost:3000/api/product/" + idUrl)
     .then(res => {    
         if (res.ok==true) {
             return res.json();
@@ -21,6 +21,7 @@ function infoProducts(data) {
 
     const currentKanap = data
     
+    if(...!=...) {
     let kanapImage = document.createElement('img')
     document.querySelector(".item__img").appendChild(kanapImage)
     kanapImage.src = currentKanap.imageUrl
@@ -42,4 +43,5 @@ function infoProducts(data) {
         option.value = colors
         option.innerHTML = colors
         }
+    }
 }
