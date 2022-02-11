@@ -11,13 +11,8 @@ fetch("http://localhost:3000/api/products")
         // Une erreur est survenue
           console.log('Voici une erreur', err)
           pageProducts([{name:'une erreur est survenue',description:err.message,_id:null,imageUrl:"/back/images/error_icon.png" ,altTxt:'image d\'erreur'}])    //Erreur en format JSON dans le cas ou le serveur ne répond pas
-    });
+    })
 
-/**
- * afficher les produits récupérer de l'api dans la page HTML
- * 
- * @param {Array[Object]} data est un tableau contenant les json des produits canapés 
- */
 function pageProducts(data) {
     const kanapParent = document.querySelector('section#items')
     kanapParent.innerHTML = '' 
@@ -29,17 +24,17 @@ function pageProducts(data) {
 
     let kanapLink 
     if(currentKanap._id!=null){
-        kanapLink = document.createElement('a');
-        kanapLink.href = "./product.html?id="+currentKanap._id;
+        kanapLink = document.createElement('a')
+        kanapLink.href = "./product.html?id="+currentKanap._id
     }
 
-    let kanapArticle = document.createElement('article');
+    let kanapArticle = document.createElement('article')
     if(currentKanap._id!=null){
-        kanapLink.appendChild(kanapArticle);
+        kanapLink.appendChild(kanapArticle)
     }
-    let kanapImage = document.createElement('img');
-    kanapArticle.appendChild(kanapImage);
-    kanapImage.src = currentKanap.imageUrl;
+    let kanapImage = document.createElement('img')
+    kanapArticle.appendChild(kanapImage)
+    kanapImage.src = currentKanap.imageUrl
     kanapImage.alt = currentKanap.altTxt
 
     let kanapName = document.createElement('h3')
@@ -51,7 +46,7 @@ function pageProducts(data) {
     kanapDescription.appendChild(document.createTextNode(currentKanap.description))
     
     if(currentKanap._id!=null){
-        kanapParent.appendChild(kanapLink);
+        kanapParent.appendChild(kanapLink)
     }else{
         kanapParent.appendChild(kanapArticle)
     }  
