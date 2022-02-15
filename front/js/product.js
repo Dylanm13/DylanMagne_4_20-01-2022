@@ -79,12 +79,9 @@ function addProduct(currentKanap) {
 
             if (productLocalStorage) {
                 const resultFound = productLocalStorage.find(
-                    (element) => element.productId === idUrl && element.productColor === choiceColor)
+                    element => element.idUrl && element.choiceColor)
                     //Si le produit commandé est déjà dans le panier
                     if (resultFound) {
-                        let newQuantity =
-                        parseInt(productOption.productQuantity) + parseInt(resultFound.productQuantity)
-                        resultFound.productQuantity = newQuantity
                         localStorage.setItem("product", JSON.stringify(productLocalStorage))
                         console.log(productLocalStorage)
                         popupConfirmation()
@@ -95,7 +92,7 @@ function addProduct(currentKanap) {
                         console.log(productLocalStorage)
                         popupConfirmation()
                     }
-                //Si le panier est vide
+                    //Si le panier est vide
                     } else {
                         productLocalStorage =[]
                         productLocalStorage.push(productOption)
