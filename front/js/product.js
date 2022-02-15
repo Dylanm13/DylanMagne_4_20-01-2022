@@ -13,8 +13,8 @@ fetch("http://localhost:3000/api/products/" + idUrl)
     .catch(err => {
         // Une erreur est survenue
         console.log('Voici une erreur', err)
-        infoProducts([{name:'une erreur est survenue',colors:'inconnues',price:'le prix est inconnu',description:err.message,imageUrl:"../images/error_icon.png" ,altTxt:'image d\'erreur'}])
-    });
+        infoProducts({name:'une erreur est survenue',price:null,description:err.message,imageUrl:"../images/error_icon.png" ,altTxt:'image d\'erreur'})
+    })
 
 function infoProducts(data) {
     console.log(data)
@@ -41,5 +41,64 @@ function infoProducts(data) {
         document.querySelector("#colors").appendChild(option)
         option.value = colors
         option.innerHTML = colors
-        }
+    }
+    addProduct(currentKanap)
+}
+
+function addProduct(currentKanap) {
+    const colorPicked = document.querySelector("#colors")
+    const quantityPicked = document.querySelector("#quantity")
+    const addToCart = document.querySelector("#addToCart")
+
+    addToCart.addEventListener('click', (event)=>{
+        if (quantityPicked.value > 0 && quantityPicked.value <=100 && quantityPicked.value !=0) {
+            
+            let choiceColor = colorPicked.value
+            let choiceQuantity = quantityPicked.value
+            
+            let productOption = {
+                productId: idUrl,
+                productColor: choiceColor,
+                productQuantity: Number(choiceQuantity),
+                productName: currentKanap.name,
+                prodcutPrice: currentKanap.price,
+                productDescription: currentKanap.description,
+                productImage: currentKanap.imageUrl,
+                productAltTxt: currentKanap.altTxt
+            }
+
+            let productLocalStorage = JSON.parse(localStorage.getItem("product"))
+            console.log(productLocalStorage)
+
+            const popupConfirmation = () =>{
+                if(window.confirm(`Votre commande de ${choiceQuantity} ${currentKanap.name} ${choiceColor} est ajoutée au panier
+        Pour consulter votre panier, cliquez sur OK`)){
+                    window.location.href ="cart.html"
+                } 
+            }
+
+            if (productLocalStorage) {
+                const resultFound = productLocalStorage.find(
+                    element => element.idUrl && element.choiceColor)
+                    //Si le produit commandé est déjà dans le panier
+                    if (resultFound) {
+                        localStorage.setItem("product", JSON.stringify(productLocalStorage))
+                        console.log(productLocalStorage)
+                        popupConfirmation()
+                    //Si le produit commandé n'est pas dans le panier
+                    } else {
+                        productLocalStorage.push(productOption)
+                        localStorage.setItem("product", JSON.stringify(productLocalStorage))
+                        console.log(productLocalStorage)
+                        popupConfirmation()
+                    }
+                    //Si le panier est vide
+                    } else {
+                        productLocalStorage =[]
+                        productLocalStorage.push(productOption)
+                        localStorage.setItem("product", JSON.stringify(productLocalStorage))
+                        console.table(productLocalStorage)
+                        popupConfirmation()
+                }}
+                })
 }
