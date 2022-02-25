@@ -73,7 +73,7 @@ function addProduct(currentKanap) {
             const popupConfirmation = () =>{
                 if(window.confirm(`Votre commande de ${choiceQuantity} ${currentKanap.name} ${choiceColor} est ajoutée au panier
         Pour consulter votre panier, cliquez sur OK`)){
-                    window.location.href ="cart.html"
+                    
                 } 
             }
 
@@ -82,6 +82,9 @@ function addProduct(currentKanap) {
                     element => element.idUrl && element.choiceColor)
                     //Si le produit commandé est déjà dans le panier
                     if (resultFound) {
+                        let newQuantite =
+                        parseInt(productOption.productQuantity) + parseInt(resultFound.productQuantity);
+                        resultFound.productQuantity = newQuantite;
                         localStorage.setItem("product", JSON.stringify(productLocalStorage))
                         console.log(productLocalStorage)
                         popupConfirmation()
