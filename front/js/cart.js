@@ -1,12 +1,19 @@
 let productLocalStorage = JSON.parse(localStorage.getItem("product"))
 console.log(productLocalStorage)
 const positionEmptyCart = document.querySelector("#cart__items")
+let form = document.querySelector(".cart__order__form")
+let cartPrice = document.querySelector(".cart__price")
 
 // Si le panier est vide
 function getCart(){
 if (productLocalStorage === null || productLocalStorage == 0) {
-    const emptyCart = `<p>Votre panier est vide</p>`
+    const emptyCart = `<p>VOTRE PANIER EST VIDE</p>`
     positionEmptyCart.innerHTML = emptyCart
+    positionEmptyCart.style.fontSize = '50px'
+    positionEmptyCart.style.textAlign = 'center'
+    positionEmptyCart.style.fontWeight = '600'
+    form.style.display = 'none'
+    cartPrice.style.display = 'none'
 } else {
 for (let product in productLocalStorage){
     // Insertion de l'élément "article"
@@ -50,7 +57,7 @@ for (let product in productLocalStorage){
     // Insertion du prix
     let productPrices = document.createElement("p")
     productItemContentTitlePrice.appendChild(productPrices)
-    productPrices.innerHTML = productLocalStorage[product].prodcutPrice + " €"
+    productPrices.innerHTML = productLocalStorage[product].productPrice + " €"
 
     // Insertion de l'élément "div"
     let productItemContentSettings = document.createElement("div")
@@ -89,51 +96,44 @@ for (let product in productLocalStorage){
     productSupprimer.innerHTML = "Supprimer"
 }
 }}
-getCart()
 
 function getTotals(){
-
+    for (let product in productLocalStorage) {
     // Récupération du total des quantités
-    let elementQuantity = document.getElementsByClassName('itemQuantity')
-    let elementLength = elementQuantity.length,
-    totalQtt = 0
+    totalQuantity = 0
 
-    for (let index = 0; index < elementLength; ++index) {
-        totalQtt += elementQuantity[index].valueAsNumber
-    }
+    totalQuantity += productLocalStorage[product].productQuantity
 
     let productTotalQuantity = document.getElementById('totalQuantity')
-    productTotalQuantity.innerHTML = totalQtt
-    console.log(totalQtt)
+    productTotalQuantity.innerHTML = totalQuantity
+    console.log(totalQuantity)
 
     // Récupération du prix total
-    totalPrice = 0;
+    totalPrice = 0
 
-    for (let index = 0; index < elementLength; ++index) {
-        totalPrice += (elementQuantity[index].valueAsNumber * productLocalStorage[index].prodcutPrice)
-    }
-
+    totalPrice += (productLocalStorage[product].productQuantity * productLocalStorage[product].productPrice)
+    
     let productTotalPrice = document.getElementById('totalPrice')
     productTotalPrice.innerHTML = totalPrice
     console.log(totalPrice)
+    }
 }
-getTotals()
 
-function modifyQtt() {
+function addEventListennerQuantityChange() {
     let elementModif = document.querySelectorAll(".itemQuantity")
 
-    for (let modif = 0; modif < elementModif.length; modif++){
-        elementModif[modif].addEventListener("change" , (event) => {
+    for (let indexModif = 0; indexModif < elementModif.length; indexModif++){
+        elementModif[indexModif].addEventListener("change" , (event) => {
             event.preventDefault()
 
             //Selection de l'element à modifier en fonction de son id ET sa couleur
-            let quantityModif = productLocalStorage[modif].productQuantity
-            let elementModifValue = elementModif[modif].valueAsNumber
+            let quantityModif = productLocalStorage[indexModif].productQuantity
+            let elementModifValue = elementModif[indexModif].valueAsNumber
             
             const resultFound = productLocalStorage.find((element) => element.elementModifValue !== quantityModif)
 
             resultFound.productQuantity = elementModifValue
-            productLocalStorage[modif].productQuantity = resultFound.productQuantity
+            productLocalStorage[indexModif].productQuantity = resultFound.productQuantity
 
             localStorage.setItem("product", JSON.stringify(productLocalStorage))
         
@@ -142,18 +142,17 @@ function modifyQtt() {
         })
     }
 }
-modifyQtt()
 
 function deleteProduct() {
-    let btn_supprimer = document.querySelectorAll(".deleteItem")
+    const deleteButton = document.querySelectorAll(".deleteItem")
 
-    for (let suppr = 0; suppr < btn_supprimer.length; suppr++){
-        btn_supprimer[suppr].addEventListener("click" , (event) => {
+    for (let indexDelete = 0; indexDelete < deleteButton.length; indexDelete++){
+        deleteButton[indexDelete].addEventListener("click" , (event) => {
             event.preventDefault()
 
             //Selection de l'element à supprimer en fonction de son id ET sa couleur
-            let idDelete = productLocalStorage[suppr].productId
-            let colorDelete = productLocalStorage[suppr].productColor
+            let idDelete = productLocalStorage[indexDelete].productId
+            let colorDelete = productLocalStorage[indexDelete].productColor
 
             productLocalStorage = productLocalStorage.filter(element => element.productId !== idDelete || element.productColor !== colorDelete)
             
@@ -165,89 +164,74 @@ function deleteProduct() {
         })
     }
 }
-deleteProduct()
 
 function getForm() {
-    // Ajout des Regex
-    let form = document.querySelector(".cart__order__form")
-
-    //Création des expressions régulières
-    let emailRegExp = new RegExp('^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$')
-    let charRegExp = new RegExp("^[a-zA-Z ,.'-]+$")
-    let addressRegExp = new RegExp("^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+")
-
     // Ecoute de la modification du prénom
-    form.firstName.addEventListener('change', function() {
-        validFirstName(this)
-    });
+    form.firstName.addEventListener('change', inputFirstName)
 
     // Ecoute de la modification du nom
-    form.lastName.addEventListener('change', function() {
-        validLastName(this)
-    });
+    form.lastName.addEventListener('change', inputLastName)
 
     // Ecoute de la modification de l'adresse
-    form.address.addEventListener('change', function() {
-        validAddress(this)
-    });
+    form.address.addEventListener('change', inputAddress)
 
     // Ecoute de la modification de la ville
-    form.city.addEventListener('change', function() {
-        validCity(this)
-    });
+    form.city.addEventListener('change', inputCity)
 
     // Ecoute de la modification de l'email
-    form.email.addEventListener('change', function() {
-        validEmail(this)
-    });
+    form.email.addEventListener('change', inputEmail)
 
+}
+
+    let emailRegExp = new RegExp('^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$')
+    let charRegExp = new RegExp("^[a-zA-Z,.'-]+$")
+    let addressRegExp = new RegExp("^[a-zA-Z0-9,' '-]*$")
     //validation du prénom
-    const validFirstName = function(inputFirstName) {
-        let firstNameErrorMsg = inputFirstName.nextElementSibling
-
+    function inputFirstName() {
+        let firstNameErrorMsg = document.getElementById('firstName')
         if (charRegExp.test(inputFirstName.value)) {
             firstNameErrorMsg.innerHTML = ''
         } else {
             firstNameErrorMsg.innerHTML = 'Veuillez renseigner ce champ.'
         }
-    };
-
+    }
+    
     //validation du nom
-    const validLastName = function(inputLastName) {
-        let lastNameErrorMsg = inputLastName.nextElementSibling
+    function inputLastName() {
+        let lastNameErrorMsg = document.getElementById('lastName')
 
         if (charRegExp.test(inputLastName.value)) {
             lastNameErrorMsg.innerHTML = ''
         } else {
             lastNameErrorMsg.innerHTML = 'Veuillez renseigner ce champ.'
         }
-    };
+    }
 
     //validation de l'adresse
-    const validAddress = function(inputAddress) {
-        let addressErrorMsg = inputAddress.nextElementSibling
-
+    function inputAddress() {
+        let addressErrorMsg = document.getElementById('address')
+    
         if (addressRegExp.test(inputAddress.value)) {
             addressErrorMsg.innerHTML = ''
         } else {
             addressErrorMsg.innerHTML = 'Veuillez renseigner ce champ.'
         }
-    };
+    }
 
     //validation de la ville
-    const validCity = function(inputCity) {
-        let cityErrorMsg = inputCity.nextElementSibling
+    function inputCity() {
+        let cityErrorMsg = document.getElementById('city')
 
         if (charRegExp.test(inputCity.value)) {
             cityErrorMsg.innerHTML = ''
         } else {
             cityErrorMsg.innerHTML = 'Veuillez renseigner ce champ.'
         }
-    };
+    }
 
     //validation de l'email
-    const validEmail = function(inputEmail) {
-        let emailErrorMsg = inputEmail.nextElementSibling
+    function inputEmail() {
+        let emailErrorMsg = document.getElementById('email')
 
         if (emailRegExp.test(inputEmail.value)) {
             emailErrorMsg.innerHTML = ''
@@ -255,22 +239,19 @@ function getForm() {
             emailErrorMsg.innerHTML = 'Veuillez renseigner votre email.'
         }
     }
-    }
-getForm()
-
 
 function postForm(){
-    const btn_commander = document.getElementById("order")
+    const buttonOrder = document.getElementById("order")
 
     //Ecouter le panier
-    btn_commander.addEventListener("click", (event)=>{
+    buttonOrder.addEventListener("click", (event)=>{
     
         //Récupération des coordonnées du formulaire client
-        let inputName = document.getElementById('firstName')
+        let inputFirstName = document.getElementById('firstName')
         let inputLastName = document.getElementById('lastName')
         let inputAdress = document.getElementById('address')
         let inputCity = document.getElementById('city')
-        let inputMail = document.getElementById('email')
+        let inputEmail = document.getElementById('email')
 
         //Construction d'un array depuis le local storage
         let idProducts = [];
@@ -281,11 +262,11 @@ function postForm(){
 
         const order = {
             contact : {
-                firstName: inputName.value,
+                firstName: inputFirstName.value,
                 lastName: inputLastName.value,
                 address: inputAdress.value,
                 city: inputCity.value,
-                email: inputMail.value,
+                email: inputEmail.value,
             },
             products: idProducts,
         } 
@@ -318,7 +299,10 @@ function postForm(){
         })
         })
 }
+
 postForm()
-
-
-
+getCart()
+getTotals()
+addEventListennerQuantityChange()
+deleteProduct()
+getForm()
