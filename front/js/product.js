@@ -13,7 +13,7 @@ fetch("http://localhost:3000/api/products/" + idUrl)
     .catch(err => {
         // Une erreur est survenue
         console.log('Voici une erreur', err)
-        infoProducts({name:'une erreur est survenue',price:null,description:err.message,imageUrl:"../images/error_icon.png" ,altTxt:'image d\'erreur'})
+        infoProducts({name:'une erreur est survenue',price:null,description:err.message,imageUrl:"/back/images/error_icon.png" ,altTxt:'image d\'erreur'})
     })
 
 function infoProducts(data) {
@@ -50,6 +50,7 @@ function addProduct(currentKanap) {
     const quantityPicked = document.querySelector("#quantity")
     const addToCart = document.querySelector("#addToCart")
 
+
     addToCart.addEventListener('click', (event)=>{
         if (quantityPicked.value > 0 && quantityPicked.value <=100 && quantityPicked.value !=0) {
             
@@ -61,7 +62,7 @@ function addProduct(currentKanap) {
                 productColor: choiceColor,
                 productQuantity: Number(choiceQuantity),
                 productName: currentKanap.name,
-                prodcutPrice: currentKanap.price,
+                productPrice: currentKanap.price,
                 productDescription: currentKanap.description,
                 productImage: currentKanap.imageUrl,
                 productAltTxt: currentKanap.altTxt
@@ -69,13 +70,6 @@ function addProduct(currentKanap) {
 
             let productLocalStorage = JSON.parse(localStorage.getItem("product"))
             console.log(productLocalStorage)
-
-            const popupConfirmation = () =>{
-                if(window.confirm(`Votre commande de ${choiceQuantity} ${currentKanap.name} ${choiceColor} est ajoutée au panier
-        Pour consulter votre panier, cliquez sur OK`)){
-                    
-                } 
-            }
 
             if (productLocalStorage) {
                 const resultFound = productLocalStorage.find(
@@ -87,13 +81,13 @@ function addProduct(currentKanap) {
                         resultFound.productQuantity = newQuantite;
                         localStorage.setItem("product", JSON.stringify(productLocalStorage))
                         console.log(productLocalStorage)
-                        popupConfirmation()
+                        addConfirm()                        
                     //Si le produit commandé n'est pas dans le panier
                     } else {
                         productLocalStorage.push(productOption)
                         localStorage.setItem("product", JSON.stringify(productLocalStorage))
                         console.log(productLocalStorage)
-                        popupConfirmation()
+                        addConfirm()
                     }
                     //Si le panier est vide
                     } else {
@@ -101,7 +95,34 @@ function addProduct(currentKanap) {
                         productLocalStorage.push(productOption)
                         localStorage.setItem("product", JSON.stringify(productLocalStorage))
                         console.table(productLocalStorage)
-                        popupConfirmation()
+                        addConfirm()
                 }}
                 })
+}
+
+function addConfirm() {
+    let orderConfirmation = document.createElement('div')
+    orderConfirmation.className = 'item__content__addConfirm'
+    let orderConfirmationContainer = document.createElement('p')
+    let orderConfirmationText = document.createTextNode("L'article a été ajouter au panier !")
+    orderConfirmation.appendChild(orderConfirmationContainer)
+    orderConfirmationContainer.appendChild(orderConfirmationText)
+    document.querySelector('.item__content').appendChild(orderConfirmation)
+    orderConfirmation.style.textAlign = 'center'
+    orderConfirmation.style.fontSize = '25px'
+    orderTimeout()
+}
+
+function orderTimeout() {
+    let timeout
+    let orderConfirmationLength = document.getElementsByClassName('item__content__addConfirm')
+    for (let index = 0; index < orderConfirmationLength.length; index++) {
+        console.log(orderConfirmationLength.length)
+        timeout = window.setTimeout(disappears, 2000)  
+    }
+}
+
+function disappears() {
+    let orderConfirmationDisappears = document.querySelector('.item__content__addConfirm')
+    orderConfirmationDisappears.style.display = 'none'
 }
