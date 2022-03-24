@@ -1,4 +1,8 @@
-let productLocalStorage = JSON.parse(localStorage.getItem("product"))
+let productLocalStorage 
+function initCart () {
+productLocalStorage = JSON.parse(localStorage.getItem("product"))
+}
+initCart()
 console.log(productLocalStorage)
 const positionEmptyCart = document.querySelector("#cart__items")
 let form = document.querySelector(".cart__order__form")
@@ -98,25 +102,25 @@ for (let product in productLocalStorage){
 }}
 
 function getTotals(){
-    for (let product in productLocalStorage) {
     // Récupération du total des quantités
-    totalQuantity = 0
-
-    totalQuantity += productLocalStorage[product].productQuantity
+    let totalQuantity = 0
+    for (index = 0; index < productLocalStorage.length; index++) {
+    totalQuantity += productLocalStorage[index].productQuantity
 
     let productTotalQuantity = document.getElementById('totalQuantity')
     productTotalQuantity.innerHTML = totalQuantity
     console.log(totalQuantity)
-
+    }
     // Récupération du prix total
     totalPrice = 0
-
-    totalPrice += (productLocalStorage[product].productQuantity * productLocalStorage[product].productPrice)
+    for (index = 0; index < productLocalStorage.length; index++) {
+    totalPrice += (productLocalStorage[index].productQuantity * productLocalStorage[index].productPrice)
     
     let productTotalPrice = document.getElementById('totalPrice')
     productTotalPrice.innerHTML = totalPrice
     console.log(totalPrice)
     }
+    initCart()
 }
 
 function addEventListennerQuantityChange() {
@@ -127,18 +131,14 @@ function addEventListennerQuantityChange() {
             event.preventDefault()
 
             //Selection de l'element à modifier en fonction de son id ET sa couleur
-            let quantityModif = productLocalStorage[indexModif].productQuantity
             let elementModifValue = elementModif[indexModif].valueAsNumber
             
-            const resultFound = productLocalStorage.find((element) => element.elementModifValue !== quantityModif)
-
-            resultFound.productQuantity = elementModifValue
-            productLocalStorage[indexModif].productQuantity = resultFound.productQuantity
+            productLocalStorage[indexModif].productQuantity = elementModifValue
 
             localStorage.setItem("product", JSON.stringify(productLocalStorage))
         
             // refresh rapide
-            location.reload()
+            initCart()
         })
     }
 }
