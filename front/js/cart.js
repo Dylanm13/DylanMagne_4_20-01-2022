@@ -120,7 +120,6 @@ function getTotals(){
     productTotalPrice.innerHTML = totalPrice
     console.log(totalPrice)
     }
-    initCart()
 }
 
 function addEventListennerQuantityChange() {
@@ -159,7 +158,6 @@ function deleteProduct() {
             localStorage.setItem("product", JSON.stringify(productLocalStorage))
 
             //Alerte produit supprimé et refresh
-            alert("Ce produit a bien été supprimé du panier")
             location.reload()
         })
     }

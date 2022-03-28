@@ -52,7 +52,7 @@ function addProduct(currentKanap) {
 
 
     addToCart.addEventListener('click', (event)=>{
-        if (quantityPicked.value > 0 && quantityPicked.value <=100 && quantityPicked.value !=0) {
+        if (quantityPicked.value > 0) {
             
             let choiceColor = colorPicked.value
             let choiceQuantity = quantityPicked.value
@@ -117,12 +117,9 @@ function addConfirm() {
 }
 
 function orderTimeout() {
-    let timeout
     let orderConfirmationLength = document.getElementsByClassName('item__content__addConfirm')
-    for (let index = 0; index < 1; index++) {
         console.log(orderConfirmationLength.length)
         timeout = window.setTimeout(disappears, 2000)  
-    }
 }
 
 function disappears() {
@@ -131,12 +128,12 @@ function disappears() {
 }
 
 function addCartNotif() {
-    const quantityPicked = document.querySelector("#quantity")
-    let choiceQuantity = quantityPicked.value
+    let productLocalStorage = JSON.parse(localStorage.getItem("product"))
+    let cartQuantity = productLocalStorage.length
     let cartNotif = document.createElement('div')
     cartNotif.className = 'cart__notif'
     let cartNotifContainer = document.createElement('p')
-    let cartNotifText = document.createTextNode(choiceQuantity)
+    let cartNotifText = document.createTextNode(cartQuantity)
     cartNotifContainer.appendChild(cartNotifText)
     cartNotif.appendChild(cartNotifContainer)
     document.querySelector('nav').appendChild(cartNotif)
