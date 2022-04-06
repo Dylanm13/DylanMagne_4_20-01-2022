@@ -113,7 +113,7 @@ function getTotals(){
     }
     // Récupération du prix total
     totalPrice = 0
-    for (index = 0; index < productLocalStorage.length; index++) {
+    for (let index = 0; index < productLocalStorage.length; index++) {
     totalPrice += (productLocalStorage[index].productQuantity * productLocalStorage[index].productPrice)
     
     let productTotalPrice = document.getElementById('totalPrice')
@@ -298,9 +298,9 @@ function postForm(){
         })
 }
 
-postForm()
 getCart()
 getTotals()
 addEventListennerQuantityChange()
 deleteProduct()
 getForm()
+postForm()

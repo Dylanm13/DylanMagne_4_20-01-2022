@@ -72,8 +72,7 @@ function addProduct(currentKanap) {
             console.log(productLocalStorage)
 
             if (productLocalStorage) {
-                const resultFound = productLocalStorage.find(
-                    element => element.idUrl && element.choiceColor)
+                const resultFound = productLocalStorage.find(element => element.productId === idUrl && element.productColor === choiceColor)
                     //Si le produit commandé est déjà dans le panier
                     if (resultFound) {
                         let newQuantite =
