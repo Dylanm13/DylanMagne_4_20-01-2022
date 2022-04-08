@@ -81,14 +81,14 @@ function addProduct(currentKanap) {
                         localStorage.setItem("product", JSON.stringify(productLocalStorage))
                         console.log(productLocalStorage)
                         addConfirm() 
-                        addCartNotif()                      
+                        location.reload()              
                     //Si le produit commandé n'est pas dans le panier
                     } else {
                         productLocalStorage.push(productOption)
                         localStorage.setItem("product", JSON.stringify(productLocalStorage))
                         console.log(productLocalStorage)
                         addConfirm()
-                        addCartNotif()
+                        location.reload()
                     }
                     //Si le panier est vide
                     } else {
@@ -97,7 +97,7 @@ function addProduct(currentKanap) {
                         localStorage.setItem("product", JSON.stringify(productLocalStorage))
                         console.table(productLocalStorage)
                         addConfirm()
-                        addCartNotif()
+                        location.reload()
                 }}
                 })
 }
@@ -128,7 +128,13 @@ function disappears() {
 
 function addCartNotif() {
     let productLocalStorage = JSON.parse(localStorage.getItem("product"))
-    let cartQuantity = productLocalStorage.length
+
+        let cartQuantity = 0
+        for (index = 0; index < productLocalStorage.length; index++) {
+        cartQuantity += productLocalStorage[index].productQuantity
+        console.log(productLocalStorage[index].productQuantity)
+        }
+        
     let cartNotif = document.createElement('div')
     cartNotif.className = 'cart__notif'
     let cartNotifContainer = document.createElement('p')
@@ -136,10 +142,21 @@ function addCartNotif() {
     cartNotifContainer.appendChild(cartNotifText)
     cartNotif.appendChild(cartNotifContainer)
     document.querySelector('nav').appendChild(cartNotif)
-    cartNotifContainer.style.color = 'black'
-    cartNotifContainer.style.border = 'solid black'
-    cartNotifContainer.style.borderRadius = '1rem'
-    cartNotifContainer.style.width = '5px'
-    cartNotifContainer.style.padding = '3px 10px'
-    cartNotifContainer.style.margin = '40px 6px'
+    cartNotif.style.borderRadius = '1rem'
+    cartNotif.style.width = '12px'
+    cartNotif.style.height = '12px'
+    cartNotif.style.padding = '2px 2px'
+    cartNotif.style.marginTop = '2.5rem'
+    cartNotif.style.textAlign = 'center'
+    cartNotif.style.background = '#3498db'
+    cartNotifContainer.style.color = 'white'
+    cartNotifContainer.style.margin = '0px'
+    cartNotifContainer.style.fontSize = '10px'
+    if (cartQuantity == 0) {
+        cartNotif.style.display = 'none'
+    }
 }
+addCartNotif()
+
+
+const xhr = new XMLHttpRequest()
