@@ -5,8 +5,8 @@ productLocalStorage = JSON.parse(localStorage.getItem("product"))
 initCart()
 console.log(productLocalStorage)
 const positionEmptyCart = document.querySelector("#cart__items")
-let form = document.querySelector(".cart__order__form")
 let cartPrice = document.querySelector(".cart__price")
+let form = document.querySelector(".cart__order__form")
 
 // Si le panier est vide
 function getCart(){
@@ -163,7 +163,12 @@ function deleteProduct() {
     }
 }
 
+let emailRegExp = new RegExp ('^([a-z0-9]+(?:[._-][a-z0-9]+)*)@([a-z0-9]+(?:[.-][a-z0-9]+)*\.[a-z]{2,})$')
+let charRegExp = new RegExp ("^[A-Za-z-' ']")
+let addressRegExp = new RegExp("^[a-zA-Z0-9\s,' '-]*$")
+
 function getForm() {
+
     // Ecoute de la modification du prénom
     form.firstName.addEventListener('change', inputFirstName)
 
@@ -181,59 +186,65 @@ function getForm() {
 
 }
 
-    let emailRegExp = new RegExp('^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$')
-    let charRegExp = new RegExp("^[a-zA-Z,.'-]+$")
-    let addressRegExp = new RegExp("^[a-zA-Z0-9,' '-]*$")
     //validation du prénom
-    function inputFirstName() {
-        let firstNameErrorMsg = document.getElementById('firstName')
-        if (charRegExp.test(inputFirstName.value)) {
+    function inputFirstName(event) {
+        let firstNameErrorMsg = document.getElementById('firstNameErrorMsg')
+        
+        if (charRegExp.test(event.target.value)) {
+            console.log(charRegExp.test(event.target.value))
             firstNameErrorMsg.innerHTML = ''
         } else {
-            firstNameErrorMsg.innerHTML = 'Veuillez renseigner ce champ.'
+            console.log(charRegExp.test(event.target.value))
+            firstNameErrorMsg.innerHTML = 'Veuillez renseigner votre prénom.'
         }
     }
     
     //validation du nom
-    function inputLastName() {
-        let lastNameErrorMsg = document.getElementById('lastName')
+    function inputLastName(event) {
+        let lastNameErrorMsg = document.getElementById('lastNameErrorMsg')
 
-        if (charRegExp.test(inputLastName.value)) {
+        if (charRegExp.test(event.target.value)) {
+            console.log(charRegExp.test(event.target.value))
             lastNameErrorMsg.innerHTML = ''
         } else {
-            lastNameErrorMsg.innerHTML = 'Veuillez renseigner ce champ.'
+            lastNameErrorMsg.innerHTML = 'Veuillez renseigner votre nom.'
         }
     }
 
     //validation de l'adresse
-    function inputAddress() {
-        let addressErrorMsg = document.getElementById('address')
+    function inputAddress(event) {
+        let addressErrorMsg = document.getElementById('addressErrorMsg')
     
-        if (addressRegExp.test(inputAddress.value)) {
+        if (addressRegExp.test(event.target.value)) {
+            console.log(addressRegExp.test(event.target.value))
             addressErrorMsg.innerHTML = ''
         } else {
-            addressErrorMsg.innerHTML = 'Veuillez renseigner ce champ.'
+            console.log(addressRegExp.test(event.target.value))
+            addressErrorMsg.innerHTML = 'Veuillez renseigner votre adresse.'
         }
     }
 
     //validation de la ville
-    function inputCity() {
-        let cityErrorMsg = document.getElementById('city')
+    function inputCity(event) {
+        let cityErrorMsg = document.getElementById('cityErrorMsg')
 
-        if (charRegExp.test(inputCity.value)) {
+        if (charRegExp.test(event.target.value)) {
+            console.log(charRegExp.test(event.target.value))
             cityErrorMsg.innerHTML = ''
         } else {
-            cityErrorMsg.innerHTML = 'Veuillez renseigner ce champ.'
+            cityErrorMsg.innerHTML = 'Veuillez renseigner votre ville.'
         }
     }
 
     //validation de l'email
-    function inputEmail() {
-        let emailErrorMsg = document.getElementById('email')
+    function inputEmail(event) {
+        let emailErrorMsg = document.getElementById('emailErrorMsg')
 
-        if (emailRegExp.test(inputEmail.value)) {
+        if (emailRegExp.test(event.target.value)) {
+            console.log(emailRegExp.test(event.target.value))
             emailErrorMsg.innerHTML = ''
         } else {
+            console.log(emailRegExp.test(event.target.value))
             emailErrorMsg.innerHTML = 'Veuillez renseigner votre email.'
         }
     }
@@ -268,7 +279,6 @@ function postForm(){
             },
             products: idProducts,
         } 
-
         const options = {
             method: 'POST',
             body: JSON.stringify(order),
@@ -280,17 +290,17 @@ function postForm(){
 
         fetch("http://localhost:3000/api/products/order", options)
         .then(res => {           
-            if (res.ok==true) {         //Si la réccupération est un succès
-            return res.json()       //l'API est en transcrite en format .JSON
+            if (res.ok===true) {         //Si la réccupération est un succès
+            return res.json()         //l'API est en transcrite en format .JSON
         }
-        throw new Error ('Oops ! La récupération des produits a echoué !')
-    })
+            throw new Error ('Oops ! La récupération des produits a echoué !')
+        })
         .then(data => {
             console.log(data)
-
+            localStorage.clear()
             localStorage.setItem("orderId", data.orderId)
 
-            document.location.href = "confirmation.html"
+            //document.location.href = "confirmation.html"
         })
         .catch(err => {
             alert ("Problème avec fetch : " + err.message)
@@ -334,7 +344,7 @@ getTotals()
 addEventListennerQuantityChange()
 deleteProduct()
 getForm()
-postForm()
 addCartNotif()
+postForm()
 
 
