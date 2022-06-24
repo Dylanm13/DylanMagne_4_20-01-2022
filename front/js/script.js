@@ -1,7 +1,7 @@
 //Appel de l'API pour la réccupération de données
 fetch("http://localhost:3000/api/products")
     .then(res => {
-        if (res.ok==true) {         //Si la réccupération est un succès
+        if (res.ok===true) {         //Si la réccupération est un succès
             return res.json()       //l'API est en transcrite en format .JSON
         }
         throw new Error ('Oops ! La récupération des produits a echoué !')
@@ -53,33 +53,4 @@ function pageProducts(data) {
 }  
 }
 
-function addCartNotif() {
-    let productLocalStorage = JSON.parse(localStorage.getItem("product"))
-        let cartQuantity = 0
-        for (index = 0; index < productLocalStorage.length; index++) {
-        cartQuantity += productLocalStorage[index].productQuantity
-        console.log(productLocalStorage[index].productQuantity)
-        }
-    let cartNotif = document.createElement('div')
-    cartNotif.className = 'cart__notif'
-    let cartNotifContainer = document.createElement('p')
-    let cartNotifText = document.createTextNode(cartQuantity)
-    cartNotifContainer.appendChild(cartNotifText)
-    cartNotif.appendChild(cartNotifContainer)
-    document.querySelector('nav').appendChild(cartNotif)
-    cartNotif.style.borderRadius = '1rem'
-    cartNotif.style.width = '12px'
-    cartNotif.style.height = '12px'
-    cartNotif.style.padding = '2px 2px'
-    cartNotif.style.marginTop = '2.5rem'
-    cartNotif.style.textAlign = 'center'
-    cartNotif.style.background = '#3498db'
-    cartNotifContainer.style.color = 'white'
-    cartNotifContainer.style.margin = '0px'
-    cartNotifContainer.style.fontSize = '10px'
-    if (cartQuantity == 0) {
-        cartNotif.style.display = 'none'
-    }
-}
-addCartNotif()
 

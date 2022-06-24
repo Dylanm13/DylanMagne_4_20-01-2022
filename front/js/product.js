@@ -4,7 +4,7 @@ console.log(idUrl)
 
 fetch("http://localhost:3000/api/products/" + idUrl)
     .then(res => {    
-        if (res.ok==true) {
+        if (res.ok===true) {
             return res.json();
         }
         throw new Error('Oops ! Le récupération du produit a echoué !')
@@ -46,8 +46,18 @@ function infoProducts(data) {
 }
 
 
-let cartQuantity
-addCartNotif()
+let orderConfirmation = document.createElement('div')
+    orderConfirmation.className = 'item__content__addConfirm'
+    let orderConfirmationContainer = document.createElement('p')
+    let orderConfirmationText = document.createTextNode("L'article a été ajouter au panier !")
+    orderConfirmation.appendChild(orderConfirmationContainer)
+    orderConfirmationContainer.appendChild(orderConfirmationText)
+    document.querySelector('.item__content').appendChild(orderConfirmation)
+    orderConfirmation.style.textAlign = 'center'
+    orderConfirmation.style.fontSize = '25px'
+    orderConfirmation.style.display = 'none'
+
+let cartQuantity = 0
 let cartNotif = document.createElement('div')
 cartNotif.className = 'cart__notif'
 let cartNotifContainer = document.createElement('p')
@@ -65,7 +75,7 @@ cartNotif.style.background = '#3498db'
 cartNotifContainer.style.color = 'white'
 cartNotifContainer.style.margin = '0px'
 cartNotifContainer.style.fontSize = '10px'
-if (cartQuantity == 0) {
+if (cartQuantity === 0) {
     cartNotif.style.display = 'none'
 }
 
@@ -76,10 +86,7 @@ function addProduct(currentKanap) {
 
     addToCart.addEventListener('click', (event)=>{
         if (quantityPicked.value > 0) {
-            
-            addConfirm()
-            addCartNotif()
-            console.log(cartQuantity)
+
             let choiceColor = colorPicked.value
             let choiceQuantity = quantityPicked.value
             
@@ -96,6 +103,10 @@ function addProduct(currentKanap) {
 
             let productLocalStorage = JSON.parse(localStorage.getItem("product"))
             console.log(productLocalStorage)
+            orderConfirmation.style.display = 'block'
+            orderConfirmTimeout()
+            orderConfirmation 
+            console.log(cartQuantity)
 
             if (productLocalStorage) {
                 const resultFound = productLocalStorage.find(element => element.productId === idUrl && element.productColor === choiceColor)
@@ -106,11 +117,13 @@ function addProduct(currentKanap) {
                         resultFound.productQuantity = newQuantite
                         localStorage.setItem("product", JSON.stringify(productLocalStorage))
                         console.log(productLocalStorage)
+                        
                     //Si le produit commandé n'est pas dans le panier
                     } else {
                         productLocalStorage.push(productOption)
                         localStorage.setItem("product", JSON.stringify(productLocalStorage))
                         console.log(productLocalStorage)
+                        
                     }
                     //Si le panier est vide
                     } else {
@@ -118,44 +131,16 @@ function addProduct(currentKanap) {
                         productLocalStorage.push(productOption)
                         localStorage.setItem("product", JSON.stringify(productLocalStorage))
                         console.log(productLocalStorage)
+                        
                 }
         }
        })
 }
 
-function addConfirm() {
-    let orderConfirmation = document.createElement('div')
-    orderConfirmation.className = 'item__content__addConfirm'
-    let orderConfirmationContainer = document.createElement('p')
-    let orderConfirmationText = document.createTextNode("L'article a été ajouter au panier !")
-    orderConfirmation.appendChild(orderConfirmationContainer)
-    orderConfirmationContainer.appendChild(orderConfirmationText)
-    document.querySelector('.item__content').appendChild(orderConfirmation)
-    orderConfirmation.style.textAlign = 'center'
-    orderConfirmation.style.fontSize = '25px'
-    orderTimeout()
+function orderConfirmTimeout() {
+    window.setTimeout(disappear, 2000)
 }
 
-
-function orderTimeout() {
-    let orderConfirmationLength = document.getElementsByClassName('item__content__addConfirm')
-        console.log(orderConfirmationLength.length)
-        timeout = window.setTimeout(disappears, 2000)  
+function disappear() {
+    orderConfirmation.style.display = 'none'
 }
-
-function disappears() {
-    let orderConfirmationDisappears = document.querySelector('.item__content__addConfirm')
-    orderConfirmationDisappears.style.display = 'none'
-}
-
-function addCartNotif() {
-    let productLocalStorage = JSON.parse(localStorage.getItem("product"))
-        cartQuantity = 0
-        for (index = 0; index < productLocalStorage.length; index++) {
-        cartQuantity += productLocalStorage[index].productQuantity
-        }
-}
-
-    
-
-
