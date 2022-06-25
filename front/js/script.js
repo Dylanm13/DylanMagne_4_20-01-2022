@@ -1,7 +1,7 @@
 //Appel de l'API pour la réccupération de données
 fetch("http://localhost:3000/api/products")
     .then(res => {
-        if (res.ok==true) {         //Si la réccupération est un succès
+        if (res.ok===true) {         //Si la réccupération est un succès
             return res.json()       //l'API est en transcrite en format .JSON
         }
         throw new Error ('Oops ! La récupération des produits a echoué !')
@@ -52,9 +52,5 @@ function pageProducts(data) {
     }  
 }  
 }
-
-
-
-
 
 
