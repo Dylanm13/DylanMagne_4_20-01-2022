@@ -129,15 +129,15 @@ function addEventListennerQuantityChange() {
         elementModif[indexModif].addEventListener("change" , (event) => {
             event.preventDefault()
 
-            //Selection de l'element à modifier en fonction de son id ET sa couleur
             let elementModifValue = elementModif[indexModif].valueAsNumber
             
             productLocalStorage[indexModif].productQuantity = elementModifValue
 
             localStorage.setItem("product", JSON.stringify(productLocalStorage))
+
+            location.reload()
         
-            // refresh rapide
-            initCart()
+            
         })
     }
 }
@@ -255,13 +255,13 @@ function postForm(){
     //Ecouter le panier
     buttonOrder.addEventListener("click", (event)=>{
     
+        event.preventDefault()
         //Récupération des coordonnées du formulaire client
         let inputFirstName = document.getElementById('firstName')
         let inputLastName = document.getElementById('lastName')
         let inputAdress = document.getElementById('address')
         let inputCity = document.getElementById('city')
         let inputEmail = document.getElementById('email')
-        event.preventDefault()
 
         //Construction d'un array depuis le local storage
         let idProducts = [];

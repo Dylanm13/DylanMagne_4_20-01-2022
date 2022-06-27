@@ -57,28 +57,6 @@ let orderConfirmation = document.createElement('div')
     orderConfirmation.style.fontSize = '25px'
     orderConfirmation.style.display = 'none'
 
-let cartQuantity = 0
-let cartNotif = document.createElement('div')
-cartNotif.className = 'cart__notif'
-let cartNotifContainer = document.createElement('p')
-let cartNotifText = document.createTextNode(cartQuantity)
-cartNotifContainer.appendChild(cartNotifText)
-cartNotif.appendChild(cartNotifContainer)
-document.querySelector('nav').appendChild(cartNotif)
-cartNotif.style.borderRadius = '1rem'
-cartNotif.style.width = '12px'
-cartNotif.style.height = '12px'
-cartNotif.style.padding = '2px 2px'
-cartNotif.style.marginTop = '2.5rem'
-cartNotif.style.textAlign = 'center'
-cartNotif.style.background = '#3498db'
-cartNotifContainer.style.color = 'white'
-cartNotifContainer.style.margin = '0px'
-cartNotifContainer.style.fontSize = '10px'
-if (cartQuantity === 0) {
-    cartNotif.style.display = 'none'
-}
-
 function addProduct(currentKanap) {
     const colorPicked = document.querySelector("#colors")
     const quantityPicked = document.querySelector("#quantity")
@@ -106,7 +84,6 @@ function addProduct(currentKanap) {
             orderConfirmation.style.display = 'block'
             orderConfirmTimeout()
             orderConfirmation 
-            console.log(cartQuantity)
 
             if (productLocalStorage) {
                 const resultFound = productLocalStorage.find(element => element.productId === idUrl && element.productColor === choiceColor)

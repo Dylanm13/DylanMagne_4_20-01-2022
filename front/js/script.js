@@ -6,7 +6,7 @@ fetch("http://localhost:3000/api/products")
         }
         throw new Error ('Oops ! La récupération des produits a echoué !')
     })
-    .then(pageProducts)             //Déclaration de la fonction pageProduct
+    .then(pageProducts)             //Appel de la fonction pageProduct
     .catch(err => {
         // Une erreur est survenue
           console.log('Voici une erreur', err)
